@@ -28,6 +28,6 @@ jobs:
 # Sequential workflow
 workflows:
   # Name the workflow
-  myWorkflow:
+  create_infrastructure:
     jobs:
-      - create-infrastructure
+      - create_infrastructure
