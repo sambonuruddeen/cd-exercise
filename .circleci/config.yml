@@ -1,4 +1,6 @@
 version: 2.1
+
+# Commands Section
 commands:
   # Exercise - Rollback
   destroy_infrastructure:
