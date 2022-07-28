@@ -1,10 +1,21 @@
 version: 2.1
+# Use a package of configuration called an orb.
+orbs:
+  # Choose either one of the orbs below
+  # welcome: circleci/welcome-orb@0.4.1
+  # aws-cli: circleci/aws-cli@2.0.3
 
-# Commands
 commands:
+  # Exercise: Reusable Job Code
+  print_pipeline_id:
+    parameters:
+      id: 
+        type: string
+    steps:
+      - run: echo << parameters.id >>
+
   # Exercise - Rollback
-  destroy_infrastructure:
-    description: "delete cloudformation stack previously created"
+  destroy_environment:
     steps:
       - run:
           name: Destroy environment
@@ -13,12 +24,7 @@ commands:
           when: on_fail
           command: |
             aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5}
-
-# Use a package of configuration called an orb.
-orbs:
-  # Choose either one of the orbs below
-  # welcome: circleci/welcome-orb@0.4.1
-  # aws-cli: circleci/aws-cli@2.0.3
+            
 # Define the jobs we want to run for this project
 jobs:
 # myjob1:  # Choose any name, such as `build`
