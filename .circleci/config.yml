@@ -56,8 +56,7 @@ jobs:
           command: |
             URL="https://blog.udacity.com/"
             # Test if Website exists
-            
-            if curl -s --head${URL}
+            if curl -s --head ${URL} 
             then
               return 0
             else
