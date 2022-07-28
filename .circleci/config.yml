@@ -6,15 +6,16 @@ orbs:
   # aws-cli: circleci/aws-cli@2.0.3
 commands:
   # Exercise - Rollback
-  destroy_environment:
+  destroy_infrastructure:
+    description: "delete cloudformation stack previously created"
     steps:
       - run:
-        name: Destroy Environment
-        # ${CIRCLE_WORKFLOW_ID} is a Built-in environment variable 
-        # ${CIRCLE_WORKFLOW_ID:0:5} takes the first 5 chars of the variable CIRCLE_CI_WORKFLOW_ID 
-        when: on_fail
-        command: |
-          aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:7}
+          name: Destroy environment
+           # ${CIRCLE_WORKFLOW_ID} is a Built-in environment variable 
+           # ${CIRCLE_WORKFLOW_ID:0:5} takes the first 5 chars of the variable CIRCLE_CI_WORKFLOW_ID 
+           when: on_fail
+           command: |
+            aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5}
 
 # Define the jobs we want to run for this project
 jobs:
@@ -35,10 +36,8 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file template.yml \
-              --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:7} \
+              --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
               --region us-east-1
-      - run: return 1
-      - destroy_environment:
   # Exercise: Config and Deployment
   configure_infrastructure: 
     docker:
@@ -67,24 +66,22 @@ jobs:
       - run: apk add --update curl
       - run:
           name: smoke test
-          command: |
-            URL="https://blog.udacity.com/"
-            # Test if Website exists
-            if curl -s --head ${URL} 
-            then
-              return 0
-            else
-              return 1
-            fi
+          command: return 1
+      - destroy_environment
+#          |
+#            URL="https://blog.udacity.com/"
+#            # Test if Website exists
+#            if curl -s --head ${URL} 
+#            then
+#              return 0
+#            else
+#              return 1
+#            fi
 # Sequential workflow
 workflows:
   # Name the workflow
-#  create_infrastructure:
-#    jobs:
-#      - create_infrastructure
-#  configure_infrastructure:
-#    jobs:
-#      - configure_infrastructure
-  smoke_test:
+  my_workflow:
     jobs:
-      - smoke_test
+#     - create_infrastructure
+#     - onfigure_infrastructure:
+    - smoke_test
