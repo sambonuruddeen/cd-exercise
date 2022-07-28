@@ -43,3 +43,5 @@ workflows:
     jobs:
       - create_infrastructure
       - destroy_infrastructure
+        requires:
+          - create_infrastructure
