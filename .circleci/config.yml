@@ -25,23 +25,9 @@ jobs:
               --template-file template.yml \
               --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
               --region us-east-1
-  destroy_infrastructure: 
-    docker:
-      - image: amazon/aws-cli
-    steps:
-      - checkout
-      - run:
-          name: Delete Cloudformation Stack
-          command: |
-            aws cloudformation delete-stack \
-              --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
-              --region us-east-1
 # Sequential workflow
 workflows:
   # Name the workflow
   create_infrastructure:
     jobs:
       - create_infrastructure
-      - destroy_infrastructure:
-          requires:
-            - create_infrastructure
